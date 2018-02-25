@@ -1,0 +1,562 @@
+#include <cstdio>
+#include <cstdlib>
+#include <graphics.h>
+#include <cstring>
+#include <conio.h>	//键盘输入
+#include <iostream>
+#include <algorithm>
+#include <time.h>
+using namespace std;
+
+#define KONG 120
+#define N 20
+#define SIZE 50
+IMAGE m; //图片 
+MOUSEMSG s;  //鼠标 
+
+/*定义学生结构体*/
+struct student
+{
+	long num;			//学号
+	char name[20];		//姓名
+	char sex[4];		//性别
+	char address[20];	//住址
+	int age;			//年龄
+	char id[18];		//身份证号
+	char tele[11];		//手机号码
+	char nation[10];	//民族
+}stu[N];
+int t = 1;
+int pl = 0;
+
+/**** 函数申明 ****/
+void begin();
+void init();
+void input();
+void add();
+void display();
+void delet();
+void fint();
+void preside();
+void amend();
+void Exit();
+
+/**** 初始 ****/
+void begin()
+{
+	initgraph(640, 480);
+	IMAGE M;
+	loadimage(&M, "1.jpg", 640, 480);
+	putimage(0, 0, &M);
+
+	setbkmode(TRANSPARENT);
+	settextcolor(WHITE);
+	settextstyle(40, 0, "幼圆");
+	outtextxy(75, 200, "欢迎来到学生学籍管理系统");
+
+	//颜色的变换
+	settextstyle(0, 0, "幼圆");
+	while (!_kbhit())
+	{
+		settextcolor(RED);
+		outtextxy(530, 450, "按任意键继续");
+		Sleep(200);
+		settextcolor(YELLOW);
+		outtextxy(530, 450, "按任意键继续");
+		Sleep(200);
+		settextcolor(BLACK);
+		outtextxy(530, 450, "按任意键继续");
+		Sleep(200);
+		settextcolor(GREEN);
+		outtextxy(530, 450, "按任意键继续");
+		Sleep(200);
+	}
+	closegraph();
+}
+
+/**** 主页 ****/
+void init()
+{
+	initgraph(640, 480);
+	loadimage(&m, "2.jpg", 640, 480);
+	putimage(0, 0, &m);
+
+	setbkmode(TRANSPARENT);
+	settextcolor(WHITE);
+	settextstyle(30, 15, "幼圆");
+
+	outtextxy(KONG, KONG, "录入");
+	outtextxy(KONG, KONG + 80, "显示");
+	outtextxy(KONG, KONG + 160, "增项");
+	outtextxy(KONG*2, KONG, "删项");
+	outtextxy(KONG*2, KONG + 80, "修改");
+	outtextxy(KONG*2, KONG + 160, "查找");
+	settextcolor(RED);
+	outtextxy(KONG * 4, KONG + 160, "退出");
+
+	
+	while (1)
+	{
+		s = GetMouseMsg();
+		if (s.uMsg == WM_LBUTTONDOWN)
+		{
+			//录入
+			if (s.x >= KONG&&s.x <= KONG + 68 && s.y >= KONG&&s.y <= KONG + 37)
+			{
+				closegraph();
+				input();
+			}
+			//显示
+			else if (s.x >= KONG&&s.x <= KONG + 68 && s.y >= KONG + 80 && s.y <= KONG + 117)
+			{
+				closegraph();
+				display();
+			}
+			//增项
+			else if (s.x >= KONG&&s.x <= KONG + 68 && s.y >= KONG + 160 && s.y <= KONG + 197)
+			{
+				closegraph();
+				add();
+			}
+			//删项
+			else if (s.x >= KONG * 2 && s.x <= KONG * 2 + 68 && s.y >= KONG&&s.y <= KONG + 37)
+			{
+				closegraph();
+				delet();
+			}
+			//修改
+			else if (s.x >= KONG * 2 && s.x <= KONG * 2 + 68 && s.y >= KONG + 80 && s.y <= KONG + 117)
+			{
+				closegraph();
+				amend();
+			}
+			//查找
+			else if (s.x >= KONG * 2 && s.x <= KONG * 2 + 68 && s.y >= KONG + 160 && s.y <= KONG + 197)
+			{
+				closegraph();
+				fint();
+			}
+			//退出
+			else if (s.x >= KONG * 4 && s.x <= KONG * 4 + 68 && s.y >= KONG + 160 && s.y <= KONG + 197)
+			{
+				Exit();
+			}
+		}
+	}
+	
+}
+
+/*** 学生信息录入 ***/
+void input()
+{
+	int x, count = 0;
+	char w, o;
+	struct student *p;
+	p = stu;
+	system("cls");
+	cout << "\t\t\t 学生信息的录入." << endl;
+	do
+	{
+		pl++;
+		cout << "请输入第" << t << " 个学生的信息." << endl << endl;
+		cout << "学号:" << endl;
+		cin >> p->num;
+		cout << "姓名:" << endl;
+		cin >> p->name;
+		cout << "年龄:" << endl;
+		cin >> p->age;
+		cout << "性别:" << endl;
+		cin >> p->sex;
+		cout << "地址:" << endl;;
+		cin >> p->address;
+		cout << "身份证号:" << endl;
+		cin >> p->id;
+		cout << "民族:" << endl;
+		cin >> p->nation;
+		cout << "手机号码" << endl;
+		cin >> p->tele;
+		cout << endl << endl << "是否要继续输入学生信息,如果是请按 y;不是请按 n." << endl;
+		o = getchar();
+
+		w = getchar();
+		getchar();
+		while (w!='y'&&w!='Y'&&w!='n'&&w!='N')
+		{
+			cout << "输入有误,按任意键重新选怿.\n" << endl;
+			w = getchar();
+			getchar();
+		}
+		if (w == 'y' || w == 'Y')
+		{
+
+			t++;
+			x = 1;
+			p++;
+		}
+		else
+			x = 0;
+	} while (x == 1);
+	if (w == 'n' || w == 'N')
+		cout << "按任意键返回." << endl;
+	getchar();
+
+	init();
+}
+
+/*** 学生信息的增加 ***/
+void add()
+{
+	int x;
+	char w;
+	struct student *p;
+	p = stu + t;
+	system("cls");
+	cout << endl << "\t\t\t增加学生信息." << endl;
+	do
+	{
+		cout << "请输入第" << t + 1 << "个学生的信息." << endl << endl;
+		cout << "学号:" << endl;
+		cin >> p->num;
+		cout << endl << "姓名:" << endl;
+		cin >> p->name;
+		cout << endl << "年龄:" << endl;
+		cin >> p->age;
+		cout << endl << "性别:" << endl;
+		cin >> p->sex;
+		cout << endl << "地址:" << endl;
+		cin >> p->address;
+		cout << endl << "身份证号:" << endl;
+		cin >> p->id;
+		cout << endl << "民族:" << endl;
+		cin >> p->nation;
+		cout << endl << "手机号码:" << endl;
+		cin >> p->tele;
+		getchar();
+		cout << endl << " 是否要继续输入学生信息,如果是请按 y;不是请按 n." << endl << endl;
+		w = getchar();
+		getchar();
+		p++;
+		t++;
+		while (w != 'y'&&w != 'Y'&&w != 'n'&&w != 'N')
+		{
+			cout << "输入有误,按任意键重新选怿.\n" << endl;
+			w = getchar();
+			getchar();
+		}
+		if (w == 'y' || w == 'Y')
+		{
+			x = 1;
+		}
+		if (w == 'n' || w == 'N')
+		{
+			x = 0;
+			break;
+		}
+	} while (x == 1);
+
+	if (x == 0)
+	{
+		cout << endl << "按任意键返回." << endl;
+		getchar();
+		init();
+	}
+}
+
+/*** 学生信息的删除 ***/
+void delet()
+{
+	long b;
+	int r = t;
+	char c, x;
+	struct student *p;
+	system("cls");
+	cout << endl << "\t\t\t删除学生信息" << endl;
+	cout << " 请输入要删除学生的学号:" << endl << endl;
+	cin >> b;
+	for (p = stu; p<stu + t; p++)
+	if (p->num == b)
+		break;
+	else
+		r--;
+	if (r == 0)
+	{
+		cout << "你要删除的学生不存在,请按任意键返回." << endl;
+		getchar();
+		init();
+	}
+	cout << endl << " 你要删除的学生为:" << endl;
+	printf("%-8s%-8s%-8s%-8s%-8s%-8s%-8s%-8s\n\n", "学号", "姓名", "年龄", "性别", "地址 ", "身份证号", "民族", "手机号码");
+	printf("%-8ld%-8s%-8d%-8s%-8s%-8s%-8s%-8s", p->num, p->name, p->age, p->sex, p->address, p->id, p->nation, p->tele);
+	cout << endl << "你确定要删除吗?如是请输入 y;不是请输入 n." << endl;
+	x = getchar();
+
+	c = getchar();
+	getchar();
+	while (c != 'y'&&c != 'Y'&&c != 'n'&&c != 'N')
+	{
+		cout << "输入有误,按任意键重新选怿.\n" << endl;
+		c = getchar();
+		getchar();
+	}
+	if (c == 'y' || c == 'Y')
+	{
+		for (p = stu; p<stu + t; p++)
+			*p = *(p + 1);
+		t--;
+		cout << "系统已为你删除信息，请按任意键返回." << endl;
+		getch();
+		init();
+	}
+	if (c == 'n' || c == 'N')
+	{
+		cout << "删除信息取消！按任意键返回." << endl;
+		getch();
+		init();
+	}
+}
+
+/*** 学生信息的修改 ***/
+void amend()
+{
+	long j;
+	int  z, r = t;
+	char c, d, e, f, v, h3, ab;
+	struct student *p;
+	system("cls");
+	cout << endl << "\t\t\t修改学生信息" << endl;
+	cout << " 请输入要修改学生的学号:" << endl << endl;
+	cin >> j;
+	getchar();
+	for (p = stu; p<stu + t; p++)
+	if (p->num == j)
+		break;
+	else
+		r--;
+	if (r == 0)
+	{
+		cout << "你输入的学生不存在,请按任意键返回." << endl;
+		getch();
+		init();
+	}
+	cout << endl << "你要修改的学生为:" << endl;
+	printf("%-8s%-8s%-8s%-8s%-8s%-8s%-8s%-8s\n\n", "学号", "姓名", "年龄", "性别", "地址 ", "身份证号", "民族", "手机号码");
+	printf("%-8ld%-8s%-8d%-8s%-8s%-8s%-8s%-8s", p->num, p->name, p->age, p->sex, p->address, p->id, p->nation, p->tele);
+	cout << endl << endl << "是否要修改学号:是请按 y;不是请按 n." << endl << endl;
+	c = getchar();
+	getchar();
+	while (c != 'y'&&c != 'Y'&&c != 'n'&&c != 'N')
+	{
+		cout << "输入有误,按任意键重新选怿.\n" << endl;
+		c = getchar();
+		getchar();
+	}
+	if (c == 'y' || c == 'Y')
+	{
+		cout << "请输入正确的学号：" << endl << endl;
+		cin >> p->num;
+		getchar();
+	}
+	if (c == 'n' || c == 'N')
+		z = 1;
+	cout << "是否要修改姓名：是请按 y;不是请按 n." << endl << endl;
+	d = getchar();
+	getchar();
+	while (d != 'y'&&d != 'Y'&&d != 'n'&&d != 'N')
+	{
+		cout << "输入有误,按任意键重新选怿.\n" << endl;
+		d = getchar();
+		getchar();
+	}
+	if (d == 'y' || d == 'Y')
+	{
+		cout << "请输入正确的姓名：" << endl;
+		cin >> p->name;
+		getchar();
+	}
+	if (d == 'n' || d == 'N')
+		z++;
+	cout << endl << " 是否要修改性别：是请按 y;不是请按n." << endl << endl;
+	e = getchar();
+	getchar();
+	while (e != 'y'&&e != 'Y'&&e != 'n'&&e != 'N')
+	{
+		cout << "输入有误,按任意键重新选怿.\n" << endl;
+		e = getchar();
+		getchar();
+	}
+	if (e == 'y' || e == 'Y')
+	{
+		cout << "请输入正确的性别：" << endl;
+		cin >> p->sex;
+		getchar();
+	}
+	if (e == 'N' || e == 'n')
+		z++;
+	cout << endl << " 是否要修改地区：是请按 y; 不是请按 n." << endl << endl;
+	h3 = getchar();
+	getchar();
+	while (h3 != 'y'&&h3 != 'Y'&&h3 != 'n'&&h3 != 'N')
+	{
+		cout << "输入有误,按任意键重新选怿.\n" << endl;
+		h3 = getchar();
+		getchar();
+	}
+	if (h3 == 'y' || h3 == 'Y')
+	{
+		cout << "请输入正确的地区：" << endl;
+		cin >> p->address;
+		getchar();
+	}
+	if (h3 == 'N' || h3 == 'n')
+		z++;
+	cout << endl << " 是否要修改身份证号：是请按 y; 不是请按 n." << endl << endl;
+	v = getchar();
+	getchar();
+	while (v != 'y'&&v != 'Y'&&v != 'n'&&v != 'N')
+	{
+		cout << "输入有误,按任意键重新选怿.\n" << endl;
+		v = getchar();
+		getchar();
+	}
+	if (v == 'y' || v == 'Y')
+	{
+		cout << "请输入正确的身份证号：" << endl;
+		cin >> p->id;
+		getchar();
+	}
+	cout << endl << " 是否要修改民族：是请按 y; 不是请按 n." << endl << endl;
+	ab = getchar();
+	getchar();
+	while (ab != 'y'&&ab != 'Y'&&ab != 'n'&&ab != 'N')
+	{
+		cout << "输入有误,按任意键重新选怿.\n" << endl;
+		ab = getchar();
+		getchar();
+	}
+	if (ab == 'y' || ab == 'Y')
+	{
+		cout << "请输入正确的民族：" << endl;
+		cin >> p->nation;
+		getchar();
+	}
+	cout << endl << " 是否要修改手机号码：是请按 y; 不是请按 n." << endl << endl;
+	char ac;
+	ac = getchar();
+	getchar();
+	while (ac != 'y'&&ac != 'Y'&&ac != 'n'&&ac != 'N')
+	{
+		cout << "输入有误,按任意键重新选怿.\n" << endl;
+		ac = getchar();
+		getchar();
+	}
+	if (ac == 'y' || ac == 'Y')
+	{
+		cout << "请输入正确的手机号码：" << endl;
+		cin >> p->tele;
+		getchar();
+	}
+	cout << endl << "修改成功！" << endl;
+	cout << "是否继续修改：是请按 y;不是请按 n" << endl;
+	f = getchar();
+	getchar();
+	while (f != 'y'&&f != 'Y'&&f != 'n'&&f != 'N')
+	{
+		cout << "输入有误,按任意键重新选怿.\n" << endl;
+		f = getchar();
+		getchar();
+	}
+	if (f == 'y' || f == 'Y')
+	{
+		amend();
+	}
+	else
+	{
+		cout << "请按任意键返回." << endl;
+		getchar();
+		init();
+	}
+}
+
+/*** 显示学生信息 ***/
+void display()
+{
+	/*
+	initgraph(640, 480);
+	loadimage(&m, "2.jpg", 640, 480);
+	putimage(0, 0, &m);
+
+	setbkmode(TRANSPARENT);
+	settextcolor(WHITE);
+	settextstyle(15, 8, "幼圆");
+
+	outtextxy(270, 20, "学生信息显示");
+	outtextxy(SIZE-10, SIZE, "学号     姓名   年龄   性别   地址    身份证号    民族    手机号码");
+
+	settextstyle(0, 0, "幼圆");
+	settextcolor(BLACK);
+	*/
+	system("cls");
+	int j;
+	cout << "学号\t\t姓名\t\t年龄\t\t性别\t地址\t身份证号\t民族\t手机号码" << endl << endl;
+	for (j = 0; j<t; j++)
+	{
+		//outtextxy(30, 80+j*20, "12345");
+		cout << stu[j].num << "\t\t" << stu[j].name << "\t\t" << stu[j].age << "\t\t" << stu[j].sex << "\t" << stu[j].address << "\t" << stu[j].id << "\t\t" << stu[j].nation << "\t" << stu[j].tele << endl;
+		cout << endl << endl;
+	}
+	/*
+	settextcolor(WHITE);
+	outtextxy(530, 450, "按任意键继续");
+	*/
+	cout << endl << endl << " 显示完成,请按任意键返回.";
+	getchar();
+	closegraph();
+	init();
+}
+
+/*** 查找学生信息 ***/
+void fint()
+{
+	int i, j = t;
+	long num_a;
+	struct student *p;
+	char a, b;
+	system("cls");
+	cout << endl << "\t\t\t查找学生信息" << endl;
+	cout << "\t 请输入要查找的学生学号:" << endl;
+	cin >> num_a;
+	for (p = stu; p<stu + t; p++)
+	{
+		j--;
+		if (p->num == num_a)
+			break;
+		if (j == 0)
+		{
+			cout << "不存在该学生,请按任意键返回." << endl << endl;
+			a = getchar();
+			getch();
+			init();
+		}
+	}
+	cout << endl << " 你要查找的学生为:" << endl << endl;
+	printf("%-8s%-8s%-8s%-8s%-8s%-8s%-8s%-8s\n\n", "学号", "姓名", "年龄", "性别", "地址 ", "身份证号", "民族", "手机号码");
+	printf("%-8ld%-8s%-8d%-8s%-8s%-8s%-8s%-8s", p->num, p->name, p->age, p->sex, p->address, p->id, p->nation, p->tele);
+	cout << endl << endl << " 查找完成,请按任意键返回.";
+	b = getchar();
+	getch();
+	init();
+}
+
+/**** 退出系统 ****/
+void Exit()
+{
+	closegraph();
+	exit(0);
+}
+
+int main()
+{
+	begin();
+	init();
+	return 0;
+}
