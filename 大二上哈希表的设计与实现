@@ -1,0 +1,440 @@
+# include <stdio.h>
+# include <stdlib.h>//清屏 
+# include <math.h>//比较 
+# include <string.h>
+# define mod 11
+typedef struct
+{
+	char num[100];
+	char name[100];
+	char address[100];
+	int x; 
+}record;//公共溢出区法 
+typedef struct node
+{
+	char num[100];
+	char name[100];
+	char address[100];
+	struct node *next;
+}Node; 
+typedef struct
+{
+	record elem[11];
+	int length;//记录的个数 
+}HashTable;
+typedef struct
+{
+	record elem[100];
+	int length;
+}OverTable;
+typedef struct
+{
+	Node *y;
+	int x; // 判断指针域是否为空 
+}record1;//链地址法 
+struct lsl
+{
+	record1 elem[11];
+	int length;	
+}t1;	
+HashTable t2; 
+OverTable t3;
+void chakan();
+void add();
+void add1();
+void add2();
+void search(); 
+void search1();
+void search2();
+int main()
+{
+	int m,ans,r;
+	while(1)
+	{	
+		system("cls");
+		printf("\n");
+		printf("\n");
+		printf("\n");
+		printf("\n");
+		printf("    * * *       * * *         \n");
+		printf("  *       *   *       *       \n");
+		printf("  *         *         *       \n");
+		printf("   *                 *        \n");
+		printf("    *               *         \n");
+		printf("     *             *          \n");
+		printf("       *         *  -----------  欢迎来到电话号码查找系统！！ ----------------\n");
+		printf("         *     *  \n");
+		printf("            *   -------------------  请输入1进入新世界！ ---------------------\n");
+		printf("\n");
+		printf("\n");
+		printf("\n");
+		printf("\n");
+		printf("                                                          -------创建团队：LSL\n"); 
+		scanf("%d",&r);
+		if(r==1)
+			break;
+	}
+	while(1)
+	{
+		system("cls");
+		printf("                 电话号码查找系统！！                         \n");
+		printf("\n");
+   		printf("                 1.添加记录 \n");
+    	printf("\n");
+		printf("                 2.查看已存在的记录 \n");
+		printf("\n");
+    	printf("                 3.查找电话簿中的记录\n");
+    	printf("\n");
+		printf("                 4.退出系统\n");
+		printf("\n");
+ 		printf("\n");   
+		while(1)
+		{
+			printf("--请选择你想进行的操作:");
+			scanf("%d",&m);	
+			ans=1;	
+	  		int mark=0;
+	  		switch(m)
+	  		{
+				case 1:add();break;
+				case 2:chakan();break;
+				case 3:search();break;
+	    		case 4:ans=0;break;
+	    		default:printf("该选择不存在！请重新选择！\n");mark=1;
+	  		} 
+	  		if(mark==0)
+	  		break;
+		}	
+		if(ans==0)
+		{
+			break; 
+		}
+	}
+	system("cls");
+	printf("感谢你使用电话号码查找系统！！！");
+} 
+void add()
+{
+	int l,mark;
+	system("cls");
+	printf("请输入1或2选择你要解决冲突的方法:\n");
+	printf("1.用链地址法添加记录到电话簿1中  2.用公共溢出区法添加记录到电话簿2中\n");
+	while(1)
+	{
+		scanf("%d",&l);
+		mark=0;
+		switch(l)
+		{
+			case 1:add1();break;
+	    	case 2:add2();break;
+	    	default:printf("该选择不存在！请重新选择！\n");mark=1; 
+		}
+		if(mark==0)
+			break;
+		
+	}
+}
+void chakan()
+{
+	int sum1=0,sum2=0;
+	system("cls");
+	printf("已存在的纪录共有%d条！\n",t1.length+t2.length+t3.length);
+	printf("电话簿1中的记录有%d条\n",t1.length);
+	Node *p;
+	for(int i=0;i<11&&sum1<t1.length;i++)
+	{
+		if(t1.elem[i].x==0)
+		continue;
+		else
+		{		
+			p=t1.elem[i].y;
+			while(p)
+			{	
+			    sum1++;
+				printf("电话号码为：%s   姓名为：%s     地址为：%s   \n",p->num,p->name,p->address);
+				p=p->next;
+			}			
+		}
+	}
+	printf("电话簿2中的记录有%d条\n",t2.length+t3.length);
+	for(int i=0;i<11&&sum2<t2.length;i++)
+	{
+		if(t2.elem[i].x==0)
+		continue;
+		else
+		{
+			sum2++;
+			printf("电话号码为：%s   姓名为：%s     地址为：%s   \n",t2.elem[i].num,t2.elem[i].name,t2.elem[i].address);
+		}
+	}
+	sum2=0;
+	for(int i=0;i<100&&sum2<t3.length;i++)
+	{
+		if(t3.elem[i].x==0)
+		continue;
+		else
+		{
+			sum2++;
+			printf("电话号码为：%s   姓名为：%s     地址为：%s   \n",t3.elem[i].num,t3.elem[i].name,t3.elem[i].address);
+		}
+	}
+	printf("请按A回到主界面！\n"); 
+	char m;
+    while(1)
+    {
+    	 m=getchar();
+    	 if(m=='A')
+    	 break;
+	} 
+}
+void add1()
+{
+    char s1[100],s2[100],s3[100];
+    char xnum[100],xname[100],xaddress[100];
+	int sum,mark,num,len,ans,m,s;
+	system("cls");
+	printf("请输入你想添加到电话簿1中的记录个数：");
+	scanf("%d",&sum);
+	for(int i=0;i<sum;i++)
+	{
+		printf("请输入第%d个记录的电话号码，姓名，地址\n",i+1);
+		scanf("%s%s%s",xnum,xname,xaddress);
+		printf("你输入的记录为:\n");
+		printf("%s %s %s\n",xnum,xname,xaddress);
+		printf("请确认你输入的信息是否正确！\n");
+		printf("1.是      2.否\n");
+		while(1)
+		{
+			int flag=0;
+			scanf("%d",&s);
+			switch(s)
+			{
+				case 1:strcpy(s1,xnum);strcpy(s2,xname);strcpy(s3,xaddress);break;
+				case 2:printf("请再次输入你想记录的信息:\n");printf("电话号码，姓名，地址\n");scanf("%s%s%s",s1,s2,s3);break;
+				default:printf("该选择不存在！请重新选择！\n");flag=1;
+			}
+			if(flag==0)
+			break;
+		}
+		len=strlen(s1);
+		ans=0;
+		for(int j=0;j<len;j++)
+		{
+			ans+=(s1[j]-'0');// ASCII相减 
+		} 
+		m=ans%mod;
+		Node *p,*q;
+		p=(Node *)malloc(sizeof(Node));
+		strcpy(p->num,s1);
+		strcpy(p->name,s2);
+		strcpy(p->address,s3);
+		p->next=NULL;	
+		if(t1.elem[m].x==0)
+		{
+		    t1.elem[m].y=p;	
+			t1.elem[m].x=1;
+		}
+		else
+		{
+		   	q=t1.elem[m].y;
+		   	while(q->next)
+		   	{
+		   		q=q->next;
+			}
+			q->next=p;
+		}
+	}	
+	t1.length=t1.length+sum;
+	printf("请按A回到主界面！\n"); 
+	char mm;
+    while(1)
+    {
+    	 mm=getchar();
+    	 if(mm=='A')
+    	 break;
+	} 
+} 
+void add2()
+{
+	char s1[100],s2[100],s3[100];
+	char xnum[100],xname[100],xaddress[100];
+	int sum,mark,n,len,ans,m,jishu1,jishu,s;
+	system("cls");
+	printf("请输入你想添加到电话簿2中的记录个数：");
+	scanf("%d",&sum);
+	for(int i=0;i<sum;i++)
+	{
+		printf("请输入第%d个记录的电话号码，姓名，地址\n",i+1);
+		scanf("%s%s%s",xnum,xname,xaddress);
+		printf("你输入的记录为:\n");
+		printf("%s %s %s\n",xnum,xname,xaddress);
+		printf("请确认你输入的信息是否正确！\n");
+		printf("1.是      2.否\n");
+		while(1)
+		{
+			int flag=0;
+			scanf("%d",&s);
+			switch(s)
+			{
+				case 1:strcpy(s1,xnum);strcpy(s2,xname);strcpy(s3,xaddress);break;
+				case 2:printf("请再次输入你想记录的信息:\n");printf("电话号码，姓名，地址\n");scanf("%s%s%s",s1,s2,s3);break;
+				default:printf("该选择不存在！请重新选择！\n");flag=1;
+			}
+			if(flag==0)
+			break;
+		}
+		len=strlen(s1);
+		ans=0;
+		for(int j=0;j<len;j++)
+		{
+			ans+=(s1[j]-'0');
+		} 
+		m=ans%mod;
+			if(t2.elem[m].x==0)//哈希值所对应的单元为空 
+		    {
+			strcpy(t2.elem[m].num,s1);
+			strcpy(t2.elem[m].name,s2);
+			strcpy(t2.elem[m].address,s3);
+			t2.elem[m].x=1;
+			t2.length++;
+		    }
+		    else
+		    {
+		    strcpy(t3.elem[t3.length].num,s1);
+			strcpy(t3.elem[t3.length].name,s2);
+			strcpy(t3.elem[t3.length].address,s3);
+			t3.elem[t3.length].x=1;
+			t3.length++;
+			}	
+	}
+	printf("请按A回到主界面！\n"); 
+	char mm;
+    while(1)
+    {
+    	 mm=getchar();
+    	 if(mm=='A')
+    	 break;
+	} 
+}
+void search()
+{
+	int mark,l;
+	system("cls");
+	printf("请输入1或2选择你要查看的电话簿:\n");
+	printf("1.查找电话簿1中的记录  2.查找电话簿2中的记录\n");
+	while(1)
+	{
+		scanf("%d",&l);
+		mark=0;
+		switch(l)
+		{
+			case 1:search1();break;
+	    	case 2:search2();break;
+	    	default:printf("该选择不存在！请重新选择！\n");mark=1; 
+		}
+		if(mark==0)
+			break;
+		
+	}
+}
+void search1()
+{
+	char s1[100];
+	int ans,len,m;
+	system("cls");
+    printf("请输入你想查找的记录的电话号码：");
+	scanf("%s",s1);
+	len=strlen(s1);
+	ans=0;
+	for(int j=0;j<len;j++)
+	{
+		ans+=(s1[j]-'0');
+	} 
+	m=ans%mod;
+	if(t1.elem[m].x==0)
+	{
+	printf("无此记录!!\n");	
+	}
+	else
+	{
+		Node *p;
+		int mark=0;
+		p=t1.elem[m].y;
+		while(p)
+		{
+			if(strcmp(p->num,s1)==0)
+			{
+				printf("此记录存在如下：\n");
+		        printf("电话号码为：%s        姓名为：%s           地址为：%s      \n",p->num,p->name,p->address);
+		        mark=1;
+		        break;
+			}
+            p=p->next;
+		}
+		if(mark==0)
+		{
+		printf("无此记录!!\n");	
+		}
+	}
+	printf("请按A回到主界面！\n"); 
+	char mm;
+    while(1)
+    {
+    	 mm=getchar();
+    	 if(mm=='A')
+    	 break;
+	} 	
+}
+void search2()
+{
+  char s1[100]; 
+  int len,ans,m;
+  system("cls");
+  printf("请输入你想查找的记录的电话号码：");
+  scanf("%s",s1);
+  len=strlen(s1); 
+  ans=0;
+  for(int j=0;j<len;j++)
+  {
+	ans+=(s1[j]-'0');
+  } 
+  m=ans%mod;
+	if(t2.elem[m].x==0)
+	{
+		printf("无此记录!!\n");	
+	}
+	else
+	{
+		if(strcmp(t2.elem[m].num,s1)==0)
+		{
+   			printf("此记录存在如下：\n");
+			printf("电话号码为：%s        姓名为：%s           地址为：%s      \n",t2.elem[m].num,t2.elem[m].name,t2.elem[m].address);
+		}
+		else
+		{
+			int mark=0;
+			for(int i=0;i<t3.length;i++)
+			{
+				if(strcmp(t3.elem[i].num,s1)==0)
+				{
+			    	printf("此记录存在如下：\n");
+	            	printf("电话号码为：%s        姓名为：%s           地址为：%s      \n",t3.elem[i].num,t3.elem[i].name,t3.elem[i].address);
+	            	mark=1;
+					break;	
+				}
+			}
+			if(mark==0)
+			{
+				printf("无此记录!!\n");		
+			}
+		}
+   }
+  	printf("请按A回到主界面！\n"); 
+	char mm;
+    while(1)
+    {
+    	 mm=getchar();
+    	 if(mm=='A')
+    	 break;
+	} 
+} 
